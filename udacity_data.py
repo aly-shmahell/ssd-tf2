@@ -89,7 +89,7 @@ class UdacityDataset():
 def create_batch_generator(data_dir, config, default_boxes,
                            new_size, batch_size, num_batches,
                            mode,
-                           augmentation=None):
+                           augmentation=['original']):
     num_examples = batch_size * num_batches if num_batches > 0 else -1
     udacity = UdacityDataset(data_dir, config, default_boxes,
                      new_size, num_examples, augmentation)
