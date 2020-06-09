@@ -31,15 +31,15 @@ class UdacityDataset():
                 if 'jpg' in x
             ][:num_examples]
         }
-        self.ids['train'] = self.ids['all'][:int(len(self.ids) * 0.75)]
-        self.ids['val']   = self.ids['all'][int(len(self.ids) * 0.75):]
+        self.ids['train'] = self.ids['all'][:int(len(self.ids['all']) * 0.75)]
+        self.ids['val']   = self.ids['all'][int(len(self.ids['all'])  * 0.75):]
 
     def __len__(self):
-        return len(self.ids)
+        return len(self.ids['all'])
 
     def _get_image(self, index):
         return Image.open(
-            os.path.join(self.data_dir, self.ids[index])
+            os.path.join(self.data_dir, self.ids['all'][index])
         )
         return img
 
@@ -48,7 +48,7 @@ class UdacityDataset():
         boxes    = []
         labels   = []
         df       = pd.read_csv(self.config)
-        for idx, row in df[df['frame']==self.ids[index]].iterrows():
+        for idx, row in df[df['frame']==self.ids['all'][index]].iterrows():
             name = row['class_id'].lower().strip()
             xmin = float(row['xmin']) / w
             ymin = float(row['ymin']) / h
@@ -58,15 +58,9 @@ class UdacityDataset():
             labels.append(self.labels[name] + 1)
         return np.array(boxes, dtype=np.float32), np.array(labels, dtype=np.int64)
 
-    def generate(self, subset=None):
-        if subset   == 'train':
-            indices = self.train_ids
-        elif subset == 'val':
-            indices = self.val_ids
-        else:
-            indices = self.ids
-        for index in range(len(indices)):
-            filename = indices[index]
+    def generate(self, subset='all'):
+        for index in range(len(self.ids[subset])):
+            filename = indices['all'][index]
             img      = self._get_image(index)
             (boxes, labels) = self._get_annotation(index, img.size)
             boxes           = tf.constant(boxes, dtype=tf.float32)
