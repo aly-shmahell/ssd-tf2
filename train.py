@@ -6,26 +6,26 @@ import time
 import yaml
 
 from tensorflow.keras.optimizers.schedules import PiecewiseConstantDecay
-from voc_data import create_batch_generator
+from udacity_data import create_batch_generator
 from anchor import generate_default_boxes
 from network import create_ssd
 from losses import create_losses
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data-dir', default='../dataset')
-parser.add_argument('--data-year', default='2007')
-parser.add_argument('--arch', default='ssd300')
-parser.add_argument('--batch-size', default=32, type=int)
-parser.add_argument('--num-batches', default=-1, type=int)
-parser.add_argument('--neg-ratio', default=3, type=int)
-parser.add_argument('--initial-lr', default=1e-3, type=float)
-parser.add_argument('--momentum', default=0.9, type=float)
-parser.add_argument('--weight-decay', default=5e-4, type=float)
-parser.add_argument('--num-epochs', default=120, type=int)
-parser.add_argument('--checkpoint-dir', default='checkpoints')
+parser.add_argument('--data-dir',        default='../udacity_driving_datasets')
+parser.add_argument('--config',          default='labels_train.csv')
+parser.add_argument('--arch',            default='ssd300')
+parser.add_argument('--batch-size',      default=32,   type=int)
+parser.add_argument('--num-batches',     default=-1,   type=int)
+parser.add_argument('--neg-ratio',       default=3,    type=int)
+parser.add_argument('--initial-lr',      default=1e-3, type=float)
+parser.add_argument('--momentum',        default=0.9,  type=float)
+parser.add_argument('--weight-decay',    default=5e-4, type=float)
+parser.add_argument('--num-epochs',      default=120,  type=int)
+parser.add_argument('--checkpoint-dir',  default='checkpoints')
 parser.add_argument('--pretrained-type', default='base')
-parser.add_argument('--gpu-id', default='0')
+parser.add_argument('--gpu-id',          default='0')
 
 args = parser.parse_args()
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     default_boxes = generate_default_boxes(config)
 
     batch_generator, val_generator, info = create_batch_generator(
-        args.data_dir, args.data_year, default_boxes,
+        args.data_dir, args.config, default_boxes,
         config['image_size'],
         args.batch_size, args.num_batches,
         mode='train', augmentation=['flip'])  # the patching algorithm is currently causing bottleneck sometimes

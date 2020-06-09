@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from anchor import generate_default_boxes
 from box_utils import decode, compute_nms
-from voc_data import create_batch_generator
+from udacity_data import create_batch_generator
 from image_utils import ImageVisualizer
 from losses import create_losses
 from network import create_ssd
@@ -16,14 +16,14 @@ from PIL import Image
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--data-dir', default='../dataset')
-parser.add_argument('--data-year', default='2007')
-parser.add_argument('--arch', default='ssd300')
-parser.add_argument('--num-examples', default=-1, type=int)
-parser.add_argument('--pretrained-type', default='specified')
-parser.add_argument('--checkpoint-dir', default='')
+parser.add_argument('--data-dir',        default='../udacity_driving_datasets')
+parser.add_argument('--config',          default='labels_val.csv')
+parser.add_argument('--arch',            default='ssd300')
+parser.add_argument('--num-examples',    default=-1, type=int)
+parser.add_argument('--pretrained-type', default='latest')
+parser.add_argument('--checkpoint-dir',  default='checkpoints')
 parser.add_argument('--checkpoint-path', default='')
-parser.add_argument('--gpu-id', default='0')
+parser.add_argument('--gpu-id',          default='0')
 
 args = parser.parse_args()
 
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     default_boxes = generate_default_boxes(config)
 
     batch_generator, info = create_batch_generator(
-        args.data_dir, args.data_year, default_boxes,
+        args.data_dir, args.config, default_boxes,
         config['image_size'],
         BATCH_SIZE, args.num_examples, mode='test')
 
