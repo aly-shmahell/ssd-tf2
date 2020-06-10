@@ -60,13 +60,12 @@ class UdacityDataset():
              os.path.join(self.data_dir, self.config)
         )
         for idx, row in df[df['frame']==self.ids['all'][index]].iterrows():
-            name = row['class_id'].lower().strip()
             xmin = float(row['xmin']) / w
             ymin = float(row['ymin']) / h
             xmax = float(row['xmax']) / w
             ymax = float(row['ymax']) / h
             boxes.append([xmin, ymin, xmax, ymax])
-            labels.append(self.labels[name] + 1)
+            labels.append(int(row['class_id']) + 1)
         return np.array(boxes, dtype=np.float32), np.array(labels, dtype=np.int64)
 
     def generate(self, subset='all'):
