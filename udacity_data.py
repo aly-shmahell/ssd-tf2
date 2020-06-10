@@ -71,7 +71,7 @@ class UdacityDataset():
 
     def generate(self, subset='all'):
         for index in range(len(self.ids[subset])):
-            filename = indices['all'][index]
+            filename = self.ids['all'][index]
             img      = self._get_image(index)
             (boxes, labels) = self._get_annotation(index, img.size)
             boxes           = tf.constant(boxes, dtype=tf.float32)
