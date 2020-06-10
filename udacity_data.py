@@ -28,6 +28,7 @@ class UdacityDataset():
                                                                  'pedestrian', 
                                                                  'bicyclist', 
                                                                  'traffic light'])])
+        print(f"num_examples: {num_examples}")
         print([
                 x 
                 for x in map(lambda x: x[:-4], os.listdir(self.data_dir)) 
