@@ -105,6 +105,7 @@ if __name__ == '__main__':
         avg_loc_loss = 0.0
         start = time.time()
         for i, (_, imgs, gt_confs, gt_locs) in enumerate(batch_generator):
+            print('before training step')    
             loss, conf_loss, loc_loss, l2_loss = train_step(
                 imgs, gt_confs, gt_locs, ssd, criterion, optimizer)
             avg_loss = (avg_loss * i + loss.numpy()) / (i + 1)
