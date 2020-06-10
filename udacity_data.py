@@ -33,15 +33,10 @@ class UdacityDataset():
                 x 
                 for x in map(lambda x: x, os.listdir(self.data_dir)) 
             ][0])
-        print([
-                x 
-                for x in map(lambda x: x[:-4], os.listdir(self.data_dir)) 
-                if 'jpg' in x
-            ][0])
         self.ids           = {
             'all': [
                 x 
-                for x in map(lambda x: x[:-4], os.listdir(self.data_dir)) 
+                for x in map(lambda x: x, os.listdir(self.data_dir)) 
                 if 'jpg' in x
             ][:num_examples]
         }
