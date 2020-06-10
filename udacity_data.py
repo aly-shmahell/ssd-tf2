@@ -15,7 +15,7 @@ class UdacityDataset():
     def __init__(self, data_dir, config, default_boxes,
                  new_size, num_examples=-1, augmentation=['original']):
         super(UdacityDataset, self).__init__()
-        self.data_dir      = os.path.join(data_dir)
+        self.data_dir      = data_dir
         self.config        = config
         self.default_boxes = default_boxes
         self.new_size      = new_size
@@ -31,12 +31,12 @@ class UdacityDataset():
         print(f"num_examples: {num_examples}")
         print([
                 x 
-                for x in map(lambda x: x[:-4], os.listdir(self.data_dir)) 
-                if 'jpg' in x
+                for x in map(lambda x: x, os.listdir(self.data_dir)) 
             ][0])
         print([
                 x 
                 for x in map(lambda x: x[:-4], os.listdir(self.data_dir)) 
+                if 'jpg' in x
             ][0])
         self.ids           = {
             'all': [
@@ -61,7 +61,9 @@ class UdacityDataset():
         (h, w)   = hw
         boxes    = []
         labels   = []
-        df       = pd.read_csv(self.config)
+        df       = pd.read_csv(
+             os.path.join(self.data_dir, self.config)
+        )
         for idx, row in df[df['frame']==self.ids['all'][index]].iterrows():
             name = row['class_id'].lower().strip()
             xmin = float(row['xmin']) / w
