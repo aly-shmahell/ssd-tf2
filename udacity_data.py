@@ -28,6 +28,15 @@ class UdacityDataset():
                                                                  'pedestrian', 
                                                                  'bicyclist', 
                                                                  'traffic light'])])
+        print([
+                x 
+                for x in map(lambda x: x[:-4], os.listdir(self.data_dir)) 
+                if 'jpg' in x
+            ][0])
+        print([
+                x 
+                for x in map(lambda x: x[:-4], os.listdir(self.data_dir)) 
+            ][0])
         self.ids           = {
             'all': [
                 x 
