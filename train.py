@@ -14,7 +14,7 @@ from losses import create_losses
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--data-dir',        default='../udacity_driving_datasets')
-parser.add_argument('--config',          default='labels_train.csv')
+parser.add_argument('--config',          default='labels_trainval.csv')
 parser.add_argument('--arch',            default='ssd300')
 parser.add_argument('--batch-size',      default=32,   type=int)
 parser.add_argument('--num-batches',     default=-1,   type=int)
@@ -65,13 +65,13 @@ if __name__ == '__main__':
         raise ValueError('Unknown architecture: {}'.format(args.arch))
 
     default_boxes = generate_default_boxes(config)
-
+    print('batch_generator, val_generator')
     batch_generator, val_generator, info = create_batch_generator(
         args.data_dir, args.config, default_boxes,
         config['image_size'],
         args.batch_size, args.num_batches,
         mode='train', augmentation=['flip'])  # the patching algorithm is currently causing bottleneck sometimes
-    
+    print(info)
     try:
         ssd = create_ssd(NUM_CLASSES, args.arch,
                         args.pretrained_type,
@@ -80,25 +80,25 @@ if __name__ == '__main__':
         print(e)
         print('The program is exiting...')
         sys.exit()
-
+    print('ssd created')
     criterion = create_losses(args.neg_ratio, NUM_CLASSES)
-
+    print('criterion')
     steps_per_epoch = info['length'] // args.batch_size
-
+    print(f'steps_per_epoch: {steps_per_epoch}')
     lr_fn = PiecewiseConstantDecay(
         boundaries=[int(steps_per_epoch * args.num_epochs * 2 / 3),
                     int(steps_per_epoch * args.num_epochs * 5 / 6)],
         values=[args.initial_lr, args.initial_lr * 0.1, args.initial_lr * 0.01])
-    
+    print('lr_fn')    
     optimizer = tf.keras.optimizers.SGD(
         learning_rate=lr_fn,
         momentum=args.momentum)
-
+    print('optimizer')    
     train_log_dir = 'logs/train'
     val_log_dir = 'logs/val'
     train_summary_writer = tf.summary.create_file_writer(train_log_dir)
     val_summary_writer = tf.summary.create_file_writer(val_log_dir)
-
+    print('before training')    
     for epoch in range(args.num_epochs):
         avg_loss = 0.0
         avg_conf_loss = 0.0
