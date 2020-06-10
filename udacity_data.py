@@ -19,20 +19,11 @@ class UdacityDataset():
         self.config        = config
         self.default_boxes = default_boxes
         self.new_size      = new_size
-        print("debug")
-        print(augmentation)
-        print(set(augmentation))
-        print(set(augmentation)|set(['original']))
         self.augmentation  = list(set(augmentation)|set(['original']))
         self.labels        = dict([(v, k) for k, v in enumerate(['car', 'truck', 
                                                                  'pedestrian', 
                                                                  'bicyclist', 
                                                                  'traffic light'])])
-        print(f"num_examples: {num_examples}")
-        print([
-                x 
-                for x in map(lambda x: x, os.listdir(self.data_dir)) 
-            ][0])
         self.ids           = {
             'all': [
                 x 
